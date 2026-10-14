@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import ForeignKey, create_engine, String, Float
+from sqlalchemy import ForeignKey, create_engine, String, Float, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session, relationship
 from typing import List
 
@@ -64,6 +64,7 @@ while True:
     print("|| 4 - EXCLUIR GATO         ||")
     print("|| 5 - EXCLUIR VACINA       ||")
     print("|| 6 - ALTERAR CONEXÃO      ||")
+    print("|| 7 - BUSCAR GATOS         ||")
     print("|| 0 - SAIR                 ||")
     print("==============================")
     
@@ -141,6 +142,13 @@ while True:
                 print("Vacina excluída com sucesso!")
             else:
                 print("Vacina não encontrada.")
+
+        elif opcao == 7:
+            n = input("Qual nome deseja buscar?")
+            sql = select(Gato).where(Gato.nome.like(f"%{n}%"))
+            user = session.scalars(sql).all()
+            for gato in user:
+                print(f"Nome: {gato.nome}, Raça: {gato.raca}, Cor: {gato.cor}, ID: {gato.id}")
         
         else:
             print("Betinha não sabe ler ou não tem capacidade de digitar certo, tente novamente.")
